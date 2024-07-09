@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Red Social</h1>
+        <div class="navbar-links">
+            <a href="inicio.html">Inicio</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="mensajes.html">Mensajes</a>
+            <div class="configuracion">
+                <a href="#">Configuración</a>
+                <div class="configuracion-menu">
+                    <a href="index.html">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="#">Publicaciones</a></li>
+                <li><a href="mensajes.html">Mensajes</a></li>
+                <li><a href="perfil.php">Perfil</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="perfil">
+                <?php
+                // Incluir archivo de conexión a la base de datos
+                require 'db.php';
+                session_start();
+
+                // Obtener datos del usuario
+                $user_id = $_SESSION['user_id'];
+                $stmt = $conn->prepare('SELECT * FROM usuarios WHERE id = :id');
+                $stmt->bindParam(':id', $user_id);
+                $stmt->execute();
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($usuario) {
+                    echo '<h2>Perfil de ' . htmlspecialchars($usuario['nombre']) . '</h2>';
+                    echo '<p>Usuario: ' . htmlspecialchars($usuario['usuario']) . '</p>';
+                    echo '<p>Email: ' . htmlspecialchars($usuario['email']) . '</p>';
+                } else {
+                    echo '<p>Error al cargar los datos del perfil.</p>';
+                }
+                ?>
+
+                <!-- Formulario para actualizar el perfil -->
+                <div class="actualizar-perfil">
+                    <h3>Actualizar Perfil</h3>
+                    <form action="actualizarPerfil.php" method="POST">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                        
+                        <label for="usuario">Usuario:</label>
+                        <input type="text" name="usuario" value="<?php echo htmlspecialchars($usuario['usuario']); ?>" required>
+                        
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                        
+                        <label for="password">Nueva Contraseña:</label>
+                        <input type="password" name="password">
+                        
+                        <button type="submit">Actualizar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>Red Social</h1>
+        <div class="navbar-links">
+            <a href="inicio.php">Inicio</a>
+            <a href="perfil.php">Perfil</a>
+            <a href="mensajes.html">Mensajes</a>
+            <div class="configuracion">
+                <a href="#">Configuración</a>
+                <div class="configuracion-menu">
+                    <a href="index.html">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="inicio.php">Inicio</a></li>
+                <li><a href="#">Publicaciones</a></li>
+                <li><a href="mensajes.html">Mensajes</a></li>
+                <li><a href="perfil.php">Perfil</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="mensajes">
+                <h2>Mensajes</h2>
+
+                <!-- Formulario para enviar un mensaje -->
+                <div class="enviar-mensaje">
+                    <form action="enviarMensaje.php" method="POST">
+                        <label for="destinatario">Para:</label>
+                        <input type="text" name="destinatario" required>
+                        
+                        <label for="contenido">Mensaje:</label>
+                        <textarea name="contenido" required></textarea>
+                        
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+
+                <!-- Mostrar los mensajes existentes -->
+                <?php
+                // Incluir archivo de conexión a la base de datos
+                require 'db.php';
+                session_start();
+
+                // Obtener ID del usuario actual
+                $user_id = $_SESSION['user_id'];
+
+                try {
+                    // Consulta para obtener los mensajes del usuario actual
+                    $stmt = $conn->prepare('SELECT * FROM mensajes INNER JOIN usuarios ON mensajes.emisor_id = usuarios.id WHERE receptor_id = :id ORDER BY fecha_envio DESC');
+                    $stmt->bindParam(':id', $user_id);
+                    $stmt->execute();
+                    $mensajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (empty($mensajes)) {
+                        echo '<p>No hay mensajes.</p>';
+                    } else {
+                        foreach ($mensajes as $mensaje) {
+                            echo '<div class="mensaje">';
+                            echo '<p>' . htmlspecialchars($mensaje['contenido']) . '</p>';
+                            echo '<span>De: ' . htmlspecialchars($mensaje['nombre']) . '</span>';
+                            echo '<span>Fecha: ' . $mensaje['fecha_envio'] . '</span>';
+                            echo '</div>';
+                        }
+                    }
+                } catch (PDOException $e) {
+                    echo "Error al obtener los mensajes: " . $e->getMessage();
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>TerapeutaSocial</h1>
+        <div class="navbar-links">
+            <a href="inicio.html">Inicio</a>
+            <a href="perfil.html">Perfil</a>
+            <a href="mensajes.html">Mensajes</a>
+            <div class="configuracion">
+                <a href="#">Configuración</a>
+                <div class="configuracion-menu">
+                    <a href="index.html">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="#">Publicaciones</a></li>
+                <li><a href="mensajes.html">Mensajes</a></li>
+                <li><a href="perfil.html">Perfil</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <!-- Formulario para crear publicación -->
+            <div class="crear-publicacion">
+                <form action="guardarPublicacion.php" method="POST">
+                    <textarea name="contenido" placeholder="Escribe tu publicación..." required></textarea>
+                    <button type="submit">Publicar</button>
+                </form>
+            </div>
+
+            <!-- Mostrar las publicaciones existentes -->
+            <div class="feed">
+                <?php
+                // Incluir archivo de conexión a la base de datos
+                require 'db.php';
+
+                try {
+                    // Consulta para obtener las publicaciones de todos los usuarios ordenadas por fecha descendente
+                    $stmt = $conn->query('SELECT * FROM publicaciones INNER JOIN usuarios ON publicaciones.usuario_id = usuarios.id ORDER BY fecha_publicacion DESC');
+                    $publicaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (count($publicaciones) > 0) {
+                        foreach ($publicaciones as $publicacion) {
+                            echo '<div class="publicacion">';
+                            echo '<p>' . htmlspecialchars($publicacion['contenido']) . '</p>';
+                            echo '<span>Publicado por: ' . htmlspecialchars($publicacion['nombre']) . '</span>';
+                            echo '<span>Fecha: ' . $publicacion['fecha_publicacion'] . '</span>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<div class="publicacion empty">';
+                        echo '<p>No hay publicaciones aún.</p>';
+                        echo '</div>';
+                    }
+                } catch (PDOException $e) {
+                    echo "Error al obtener las publicaciones: " . $e->getMessage();
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="css/index.css">
+  <title>Registro de Usuario</title>
+</head>
+<body>
+    <div class="container">
+        <section>
+            <div class="form-box2">
+                <div class="form-value">
+                    <form action="guardarUsuario.php" autocomplete="off" method="POST">
+                        <h2 style="margin-bottom: -15px;font-size:1.5em">Registro de Usuario</h2>
+                        <div class="inputbox2">
+                            <ion-icon name="finger-print-outline"></ion-icon>
+                            <input type="text" maxlength="15ch" id="nombre" name="nombre" required>
+                            <label for="nombre">Nombre</label>
+                        </div>
+                        <div class="inputbox2">
+                            <ion-icon name="finger-print-outline"></ion-icon>
+                            <input type="text" maxlength="15ch" id="apellido" name="apellido" required>
+                            <label for="apellido">Apellido(s)</label>
+                        </div>
+                        <div class="inputbox2">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <input type="text" maxlength="15ch" id="usu" name="usu" required>
+                            <label for="usu">Usuario</label>
+                        </div>
+                        <div class="inputbox2">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" id="pass"  name="cont" autocomplete="off" required>
+                            <label for="pass">Contraseña</label>
+                        </div>
+                        <div class="inputbox2">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" id="confirm_pass" name="confirm_cont" autocomplete="off" required>
+                            <label for="confirm_pass">Confirma Contraseña</label>
+                        </div>
+                        <div class="inputbox2">
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <input type="email" id="contUsuario" name="contUsuario" required>
+                            <label for="contUsuario">Email</label>
+                        </div>
+                        <div class="inputbox2">
+                            <ion-icon name="call-outline"></ion-icon>
+                            <input type="tel" maxlength="10ch" id="telUsuario" name="telUsuario" required onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                            <label for="telUsuario">Teléfono</label>
+                        </div>
+                        <input type="submit" id="reg" value="Registrar" class="button">
+                        <div class="register">
+                            <p>Tienes cuenta <a href="index.html">Inicia Sesión</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
